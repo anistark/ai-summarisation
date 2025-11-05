@@ -2,6 +2,8 @@
 
 Turn long articles, research papers, or documents into concise summaries instantly. Then evaluate how good your summaries are with objective metrics.
 
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/anistark/ai-summarisation/blob/main/summarisation_demo.ipynb)
+
 ## What This Does
 
 1. **Summarize** any text (articles, research papers, news, docs, etc.)
@@ -80,7 +82,24 @@ Expert assessment of the summary quality across multiple dimensions.
 
 ## 🚀 Quick Start
 
-### 1. Install Dependencies
+### Option A: Run in Google Colab (Easiest)
+
+Click the button at the top to open in Google Colab. Then:
+
+1. Run the first cell to install dependencies
+2. When prompted, add your OpenAI API key to Colab Secrets:
+   - Click the 🔑 icon in the left sidebar
+   - Create new secret: `OPENAI_API_KEY`
+   - Paste your API key
+3. Run the remaining cells
+
+No setup needed - everything runs in the browser! ☁️
+
+---
+
+### Option B: Run Locally
+
+#### 1. Install Dependencies
 
 ```bash
 pip install ragas langchain-openai python-dotenv pypdf python-docx
@@ -98,7 +117,7 @@ pip install ragas langchain-openai python-dotenv
 - `pypdf` - Optional: Read PDF files
 - `python-docx` - Optional: Read Word documents
 
-### 2. Set Up LLM Credentials
+#### 2. Set Up LLM Credentials
 
 Copy the example env file and add your API key:
 
@@ -119,7 +138,7 @@ The notebook will automatically load your API key from `.env`
 
 ⚠️ **Important:** Never commit `.env` to version control. It's already in `.gitignore`
 
-### 3. Run the Notebook
+#### 3. Run the Notebook
 
 ```bash
 jupyter notebook summarisation_demo.ipynb
