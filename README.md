@@ -11,72 +11,27 @@ Turn long articles, research papers, or documents into concise summaries instant
 3. **Improve** by understanding what makes a great summary
 4. Works locally - you control your data and API keys
 
-## How We Evaluate Summaries
+## Evaluation Metrics
 
-After you generate a summary, we use three specialized metrics to evaluate how good it is:
+The tool uses RAGAS 0.3.9 metrics to evaluate summaries:
 
-### 1. **Summarization Score** (0.0 - 1.0)
-Purpose-built metric specifically for evaluating summaries.
+### 1. **Summary Score** (0.0 - 1.0)
+QA-based metric evaluating information preservation and conciseness.
 
-**What it checks:**
-- Does the summary preserve key information from the source? (QA-based evaluation)
-- Is the summary appropriately concise? (Length penalty)
-- Are important facts and details captured?
-
-**How it works:**
-- Extracts keyphrases from the source text
-- Generates questions based on those keyphrases
-- Checks if the summary answers those questions
-- Penalizes overly long summaries
-
-**How to interpret:**
-- **0.8-1.0**: ✅ Excellent - Summary captures all key information with good conciseness
-- **0.6-0.8**: ✅ Good - Summary covers main points well
-- **0.4-0.6**: ⚠️ Fair - Summary could better capture key information
-- **<0.4**: ❌ Poor - Summary is missing important content
-
-**Example:**
-- Article has 500 words discussing Apple, investment, AI, researchers, locations
-- Bad summary: "Apple made announcement" → Missing key details (low score)
-- Good summary: "Apple investing $1B in AI research with 500 new hires" → Captures essentials (high score)
-
----
+- **How**: Extracts keyphrases → generates questions → verifies answers in summary
+- **0.8-1.0**: ✅ Excellent - Captures key information
+- **0.6-0.8**: ✅ Good - Covers main points
+- **0.4-0.6**: ⚠️ Fair - Missing important details
+- **<0.4**: ❌ Poor - Significant information loss
 
 ### 2. **Faithfulness** (0.0 - 1.0)
-Measures if the summary stays grounded in the source material without hallucinating.
+Verifies claims are grounded in source without hallucination.
 
-**What it checks:**
-- Are claims in the summary supported by the source?
-- Does it avoid making up information?
-- Are facts accurately represented?
-
-**How to interpret:**
-- **0.9-1.0**: ✅ Excellent - Summary is faithful to source
-- **0.7-0.9**: ✅ Good - Mostly accurate with minor issues
-- **0.5-0.7**: ⚠️ Fair - Some claims not fully grounded
-- **<0.5**: ❌ Poor - Summary contains hallucinations
-
-**Example:**
-- Source: "Revenue was $10 billion in 2023"
-- Faithful summary: "The company reported $10 billion revenue" ✅
-- Hallucinated summary: "The company doubled revenue to $20 billion" ❌
-
----
-
-### 3. **Overall Quality** (Categorical: poor/fair/good/excellent)
-Expert assessment of the summary quality across multiple dimensions.
-
-**What it checks:**
-- Is the summary well-written and clear?
-- Does it accurately convey the source material?
-- Is it useful and informative?
-- Overall expert judgment on summary quality
-
-**How to interpret:**
-- **Excellent**: Outstanding summary - accurate, complete, well-written
-- **Good**: High-quality summary - meets all key requirements
-- **Fair**: Acceptable summary - has strengths but some areas for improvement
-- **Poor**: Low-quality summary - needs significant revision
+- **How**: Checks if summary statements are supported by source text
+- **0.9-1.0**: ✅ Excellent - Fully grounded
+- **0.7-0.9**: ✅ Good - Mostly accurate
+- **0.5-0.7**: ⚠️ Fair - Some ungrounded claims
+- **<0.5**: ❌ Poor - Contains hallucinations
 
 ---
 
@@ -102,20 +57,16 @@ No setup needed - everything runs in the browser! ☁️
 #### 1. Install Dependencies
 
 ```bash
-pip install ragas langchain-openai python-dotenv pypdf python-docx
+pip install ragas==0.3.9 langchain-openai langchain-core python-dotenv pypdf python-docx
 ```
 
-Or for minimal setup:
-```bash
-pip install ragas langchain-openai python-dotenv
-```
-
-**What you're installing:**
-- `ragas` - Evaluation metrics
+**Required packages:**
+- `ragas==0.3.9` - Evaluation metrics (SummaryScore, Faithfulness)
 - `langchain-openai` - OpenAI integration
-- `python-dotenv` - Load environment variables from .env
-- `pypdf` - Optional: Read PDF files
-- `python-docx` - Optional: Read Word documents
+- `langchain-core` - LangChain base components
+- `python-dotenv` - Environment variable management
+- `pypdf` - PDF support
+- `python-docx` - Word document support
 
 #### 2. Set Up LLM Credentials
 
@@ -164,35 +115,36 @@ Just update the file path in the notebook cell.
 
 ---
 
-## 💡 What The Scores Mean
+## Score Interpretation
 
-**All three metrics combined tell you if your summary is good or needs work:**
-
-| Summarization | Faithfulness | Overall Quality | Interpretation |
-|---|---|---|---|
-| 0.8+ | 0.9+ | Excellent/Good | ✅ Excellent summary - accurate, complete, professional |
-| 0.6-0.8 | 0.7-0.9 | Good/Fair | ✅ Good summary - trustworthy and captures key info |
-| 0.4-0.6 | 0.5-0.7 | Fair | ⚠️ Acceptable - could be improved |
-| <0.4 | <0.5 | Poor | ❌ Poor summary - needs significant revision |
+| Summary Score | Faithfulness | Result |
+|---|---|---|
+| 0.8+ | 0.9+ | ✅ High quality - publish with confidence |
+| 0.6-0.8 | 0.7-0.9 | ✅ Good quality - minor review recommended |
+| 0.4-0.6 | 0.5-0.7 | ⚠️ Acceptable - needs improvement |
+| <0.4 | <0.5 | ❌ Poor - significant revision needed | |
 
 ---
 
-## How It Works
+## Workflow
 
 ```
-Your Text (article, research paper, etc.)
+Input Text
     ↓
-[LLM generates summary]
+LLM Summarization (gpt-3.5-turbo or custom)
     ↓
 Generated Summary
     ↓
-[Ragas evaluates with 3 metrics]
-    │
-    ├─ Summarization Score (QA-based + conciseness)
-    ├─ Faithfulness (checks for hallucinations)
-    └─ Overall Quality (expert assessment)
+RAGAS Evaluation
+    ├─ Summary Score (information preservation)
+    └─ Faithfulness (factual accuracy)
     ↓
-Scores + Interpretation + Recommendations
+Scores + Recommendations
+    ↓
+Optional: Test Optimization Strategies
+    ├─ Longer summary (5-7 sentences)
+    ├─ Structured prompt (WHAT/WHY/WHERE)
+    └─ Bullet points (key facts)
 ```
 
 ---
@@ -218,14 +170,14 @@ Try running the evaluation on these first, then use your own content.
 
 ---
 
-## ⚠️ Important Notes
+## Technical Notes
 
-- **All metrics require an LLM** (uses your API key - OpenAI, Claude, etc.)
-- **Summarization Score** uses keyphrases and QA to evaluate comprehensiveness
-- **Faithfulness** checks if summary stays grounded in source
-- **Overall Quality** combines multiple evaluation perspectives
-- Costs depend on LLM provider (typically $0.01-0.05 per evaluation)
-- For best results, use recent models (GPT-4o, Claude 3.5 Sonnet)
+- **RAGAS 0.3.9**: Uses AsyncOpenAI client (not text-only mode)
+- **LLM Required**: AsyncOpenAI for evaluations, OpenAI for summarization
+- **API Costs**: ~$0.01-0.05 per summary + evaluation
+- **Best Models**: GPT-4o, gpt-4o-mini (recommended for cost/quality)
+- **Optimization**: Test multiple prompts to improve Summary Score
+- **Faithfulness**: Automatically detects hallucinations and ungrounded claims
 
 ---
 
