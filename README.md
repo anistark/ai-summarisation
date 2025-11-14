@@ -184,8 +184,8 @@ Try running the evaluation on these first, then use your own content.
 ## 📚 Learn More
 
 - [Ragas Documentation](https://docs.ragas.io/)
-- [Faithfulness Metric](https://docs.ragas.io/en/latest/concepts/metrics/faithfulness.html)
-- [Answer Relevance](https://docs.ragas.io/en/latest/concepts/metrics/answer_relevance.html)
+- [Summary Score](https://docs.ragas.io/en/stable/concepts/metrics/available_metrics/summarization_score)
+- [Faithfulness Metric](https://docs.ragas.io/en/stable/concepts/metrics/available_metrics/faithfulness)
 
 ---
 
